@@ -1,0 +1,65 @@
+﻿@model GoogleMapsAPI.Models.User
+
+@{
+    ViewData["Title"] = "Create User";
+}
+
+<h2>Create User</h2>
+
+<!-- Display validation summary for model-level errors -->
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+<!-- Begin form using ASP.NET Core Tag Helpers -->
+<form asp-action="Index" method="post">
+    <div class="form-group">
+        <!-- Username Field -->
+        <label asp-for="Username" class="control-label"></label>
+        <input asp-for="Username" class="form-control" />
+        <span asp-validation-for="Username" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <!-- Password Field -->
+        <label asp-for="Password" class="control-label"></label>
+        <input asp-for="Password" class="form-control" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <!-- API Key Field -->
+        <label asp-for="EncryptedApiKey" class="control-label"></label>
+        <input asp-for="EncryptedApiKey" class="form-control" />
+        <span asp-validation-for="EncryptedApiKey" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <!-- Email Address Field -->
+        <label asp-for="Email" class="control-label"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <!-- Phone Number Field -->
+        <label asp-for="Phone" class="control-label"></label>
+        <input asp-for="Phone" class="form-control" />
+        <span asp-validation-for="Phone" class="text-danger"></span>
+    </div>
+
+    <!-- Hidden fields for CreatedAt and UpdatedAt if needed -->
+    @* 
+    <input type="hidden" asp-for="CreatedAt" />
+    <input type="hidden" asp-for="UpdatedAt" />
+    *@
+
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-primary" />
+    </div>
+</form>
+
+<!-- Include necessary scripts for client-side validation -->
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
