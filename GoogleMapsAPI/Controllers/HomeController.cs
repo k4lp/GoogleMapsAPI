@@ -1,6 +1,9 @@
 using GoogleMapsAPI.Models;
+using GoogleMapsAPI.Models.Entities;
 using GoogleMapsAPI.Services.Registration;
+
 using Microsoft.AspNetCore.Mvc;
+
 using System.Diagnostics;
 
 namespace GoogleMapsAPI.Controllers
@@ -37,7 +40,7 @@ namespace GoogleMapsAPI.Controllers
                 }
                 catch (Exception ex)
                 {
-                    ModelState.AddModelError("Password", ex.InnerException!.Message);
+                    ModelState.AddModelError("", ex.InnerException!.Message);
                     return View(user);
                 }
             }
