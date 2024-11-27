@@ -92,7 +92,7 @@ namespace GoogleMapsAPI.Controllers.RemoteValidation.UserValidators
         public async Task<IActionResult> CheckUsername(string username)
         {
             _logger.LogInformation("Validating Username: - " + username);
-            if (username.Length < 8 || username.Length > 20 || username.IsNullOrEmpty())
+            if (username.Length < 8 && username.Length > 20 && username.IsNullOrEmpty())
                 return Json("Username must be 8 characters long and at most 20.");
             if (username.Any(char.IsWhiteSpace))
                 return Json("Spaces are not allowed.");

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using GoogleMapsAPI.Models.CustomValidationAttributes.UserValidationAttributes;
+
+using Microsoft.AspNetCore.Mvc;
 
 using System.ComponentModel.DataAnnotations;
 
@@ -10,18 +12,16 @@ namespace GoogleMapsAPI.Models.Entities
         public int Id { get; set; }
 
         [Required]
-        [Display(Name = "Username", Description = "Use a unique username", Prompt = "Enter Your Username")]
         [StringLength(20, MinimumLength = 8, ErrorMessage = "Username must be between 8 and 20 characters")]
-        [Remote(action: "CheckUsername", controller: "UserValidation", ErrorMessage = "Please use proper username.")]
+        //[Remote(action: "CheckUsername", controller: "UserValidation", ErrorMessage = "Please use proper username.")]
+        [CustomUsernameValidation]
         public string? Username { get; set; }
 
 
 
         [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "Password", Description = "Create a strong password", Prompt = "Enter your password")]
-        [Remote(action: "CheckPassword", controller: "UserValidation", ErrorMessage = "Please follow the security rules for password.")]
-        public string? Password { get; set; }
+        public string? PasswordHash { get; set; }
 
 
 
@@ -49,10 +49,12 @@ namespace GoogleMapsAPI.Models.Entities
 
 
         [DataType(DataType.DateTime)]
+        [Required]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
 
         [DataType(DataType.DateTime)]
+        [Required]
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
     }
 }

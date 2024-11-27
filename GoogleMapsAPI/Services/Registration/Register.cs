@@ -28,7 +28,7 @@ namespace GoogleMapsAPI.Services.Registration
             try
             {
                 user.ApiHash = _hashing.GenerateHash(user.EncryptedApiKey!);
-                user.Password = _hashing.GenerateHash(user.Password!);
+                user.PasswordHash = _hashing.GenerateHash(user.PasswordHash!);
                 user.EncryptedApiKey = _encryptionService.Encrypt(user.EncryptedApiKey!);
                 _logger.LogInformation("In Register Service - Encrypted Data success");
                 string rawPhoneNumber = user.Phone!.Trim();
