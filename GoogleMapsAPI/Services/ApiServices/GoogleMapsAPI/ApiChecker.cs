@@ -1,6 +1,6 @@
 ﻿using GoogleMapsAPI.Data;
-using GoogleMapsAPI.Models;
-using GoogleMapsAPI.Models.GoogleMapsApiServiceModels;
+using GoogleMapsAPI.Models.Entities;
+using GoogleMapsAPI.Models.Entities.GoogleMaps;
 using GoogleMapsAPI.Services.HashingAndEncryptionService.EncryptionService;
 
 using Newtonsoft.Json;

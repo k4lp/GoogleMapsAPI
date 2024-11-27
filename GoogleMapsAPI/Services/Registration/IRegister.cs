@@ -1,4 +1,4 @@
-﻿using GoogleMapsAPI.Models;
+﻿using GoogleMapsAPI.Models.Entities;
 
 namespace GoogleMapsAPI.Services.Registration
 {

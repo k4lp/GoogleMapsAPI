@@ -1,5 +1,5 @@
 ﻿using GoogleMapsAPI.Data;
-using GoogleMapsAPI.Models;
+using GoogleMapsAPI.Models.Entities;
 using GoogleMapsAPI.Services.HashingAndEncryptionService.EncryptionService;
 using GoogleMapsAPI.Services.HashingAndEncryptionService.HashingService;
 
