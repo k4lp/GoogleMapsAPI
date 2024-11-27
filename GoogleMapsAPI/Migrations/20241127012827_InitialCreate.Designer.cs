@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GoogleMapsAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241124230811_InitialCreate")]
+    [Migration("20241127012827_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -25,7 +25,7 @@ namespace GoogleMapsAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("GoogleMapsAPI.Models.Scraping.ScrapeResult", b =>
+            modelBuilder.Entity("GoogleMapsAPI.Models.GoogleMapsApiServiceModels.GoogleMapsResult", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -33,34 +33,52 @@ namespace GoogleMapsAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Details")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("BusinessStatus")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
-                    b.Property<DateTime>("FetchedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ParentId")
+                    b.Property<int?>("GoogleMapsRootId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("StringIsFound")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SubString")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("Url")
+                    b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(400)
-                        .HasColumnType("nvarchar(400)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("PlaceId")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Vicinity")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ParentId");
+                    b.HasIndex("GoogleMapsRootId");
 
-                    b.HasIndex("Url");
+                    b.ToTable("GoogleMapsResults");
+                });
 
-                    b.ToTable("ScrapeResults");
+            modelBuilder.Entity("GoogleMapsAPI.Models.GoogleMapsApiServiceModels.GoogleMapsRoot", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("NextPageToken")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Status")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("GoogleMapsRoots");
                 });
 
             modelBuilder.Entity("GoogleMapsAPI.Models.User", b =>
@@ -114,20 +132,16 @@ namespace GoogleMapsAPI.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("GoogleMapsAPI.Models.Scraping.ScrapeResult", b =>
+            modelBuilder.Entity("GoogleMapsAPI.Models.GoogleMapsApiServiceModels.GoogleMapsResult", b =>
                 {
-                    b.HasOne("GoogleMapsAPI.Models.Scraping.ScrapeResult", "Parent")
-                        .WithMany("ChildResults")
-                        .HasForeignKey("ParentId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Parent");
+                    b.HasOne("GoogleMapsAPI.Models.GoogleMapsApiServiceModels.GoogleMapsRoot", null)
+                        .WithMany("Results")
+                        .HasForeignKey("GoogleMapsRootId");
                 });
 
-            modelBuilder.Entity("GoogleMapsAPI.Models.Scraping.ScrapeResult", b =>
+            modelBuilder.Entity("GoogleMapsAPI.Models.GoogleMapsApiServiceModels.GoogleMapsRoot", b =>
                 {
-                    b.Navigation("ChildResults");
+                    b.Navigation("Results");
                 });
 #pragma warning restore 612, 618
         }

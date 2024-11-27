@@ -12,27 +12,17 @@ namespace GoogleMapsAPI.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "ScrapeResults",
+                name: "GoogleMapsRoots",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Url = table.Column<string>(type: "nvarchar(400)", maxLength: 400, nullable: false),
-                    StringIsFound = table.Column<bool>(type: "bit", nullable: false),
-                    SubString = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    Details = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ParentId = table.Column<int>(type: "int", nullable: false),
-                    FetchedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Status = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    NextPageToken = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ScrapeResults", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ScrapeResults_ScrapeResults_ParentId",
-                        column: x => x.ParentId,
-                        principalTable: "ScrapeResults",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                    table.PrimaryKey("PK_GoogleMapsRoots", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -55,15 +45,32 @@ namespace GoogleMapsAPI.Migrations
                     table.PrimaryKey("PK_Users", x => x.Id);
                 });
 
-            migrationBuilder.CreateIndex(
-                name: "IX_ScrapeResults_ParentId",
-                table: "ScrapeResults",
-                column: "ParentId");
+            migrationBuilder.CreateTable(
+                name: "GoogleMapsResults",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    BusinessStatus = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    PlaceId = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Vicinity = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: true),
+                    GoogleMapsRootId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GoogleMapsResults", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_GoogleMapsResults_GoogleMapsRoots_GoogleMapsRootId",
+                        column: x => x.GoogleMapsRootId,
+                        principalTable: "GoogleMapsRoots",
+                        principalColumn: "Id");
+                });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ScrapeResults_Url",
-                table: "ScrapeResults",
-                column: "Url");
+                name: "IX_GoogleMapsResults_GoogleMapsRootId",
+                table: "GoogleMapsResults",
+                column: "GoogleMapsRootId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_ApiHash",
@@ -87,10 +94,13 @@ namespace GoogleMapsAPI.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ScrapeResults");
+                name: "GoogleMapsResults");
 
             migrationBuilder.DropTable(
                 name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "GoogleMapsRoots");
         }
     }
 }
