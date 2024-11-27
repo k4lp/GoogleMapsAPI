@@ -9,13 +9,16 @@ namespace GoogleMapsAPI.Services.Registration
     {
         private readonly IEncryptionService _encryptionService;
         private readonly IHashingService _hashing;
+        private readonly ILogger<Register> _logger;
         private readonly ApplicationDbContext _context;
         public Register(
+            ILogger<Register> logger,
             ApplicationDbContext context,
             IHashingService hashing,
             IEncryptionService encryptionService
             )
         {
+            _logger = logger;
             _context = context;
             _encryptionService = encryptionService;
             _hashing = hashing;
@@ -27,7 +30,7 @@ namespace GoogleMapsAPI.Services.Registration
                 user.ApiHash = _hashing.GenerateHash(user.EncryptedApiKey!);
                 user.Password = _hashing.GenerateHash(user.Password!);
                 user.EncryptedApiKey = _encryptionService.Encrypt(user.EncryptedApiKey!);
-
+                _logger.LogInformation("In Register Service - Encrypted Data success");
                 string rawPhoneNumber = user.Phone!.Trim();
                 string processedNumber = string.Empty;
                 foreach (char phone in rawPhoneNumber)
@@ -48,11 +51,12 @@ namespace GoogleMapsAPI.Services.Registration
                 await _context.Users!.AddAsync(user);
 
                 await _context.SaveChangesAsync();
-
+                _logger.LogInformation($"Registration user {user.Username} Successful!");
                 return await Task.FromResult(true);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError($"Failed to register {user.Username} - {ex.Message}");
                 return await Task.FromResult(false);
             }
         }

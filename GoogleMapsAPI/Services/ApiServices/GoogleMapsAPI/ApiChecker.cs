@@ -12,12 +12,15 @@ namespace GoogleMapsAPI.Services.ApiServices.GoogleMapsAPI
         private readonly HttpClient _httpClient;
         private readonly IEncryptionService _encryptionService;
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<ApiChecker> _logger;
         public ApiChecker(
+            ILogger<ApiChecker> logger,
             IEncryptionService encryptionService,
             HttpClient httpClient,
             ApplicationDbContext context
             )
         {
+            _logger = logger;
             _encryptionService = encryptionService;
             _context = context;
             _httpClient = httpClient;
@@ -25,7 +28,6 @@ namespace GoogleMapsAPI.Services.ApiServices.GoogleMapsAPI
 
         public async Task<bool> IsApiValidAsync(string ApiKey)
         {
-            // Simplified null/empty check
             if (string.IsNullOrWhiteSpace(ApiKey))
                 return false;
             //User? ifExist = await _context.Users!.FirstOrDefaultAsync(u => u.EncryptedApiKey == ApiKey);
@@ -37,6 +39,7 @@ namespace GoogleMapsAPI.Services.ApiServices.GoogleMapsAPI
 
             try
             {
+                _logger.LogInformation("ApiChecker - Checking for API Authentication");
                 var response = await _httpClient.GetAsync(withApiKey);
 
                 // Early return if response is null
@@ -49,10 +52,9 @@ namespace GoogleMapsAPI.Services.ApiServices.GoogleMapsAPI
                 // Check if deserialization was successful and status is OK
                 return jsonBody != null && jsonBody.Status?.Equals("OK", StringComparison.OrdinalIgnoreCase) == true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // Consider logging the exception
-                // _logger.LogError(ex, "API key validation failed");
+                _logger.LogError(ex, "API key validation failed");
                 return false;
             }
         }

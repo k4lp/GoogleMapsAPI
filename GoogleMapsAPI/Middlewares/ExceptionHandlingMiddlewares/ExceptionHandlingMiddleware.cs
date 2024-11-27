@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Diagnostics;
+using System.Net;
 
 namespace GoogleMapsAPI.Middlewares.ExceptionHandlingMiddlewares
 {
@@ -17,10 +18,22 @@ namespace GoogleMapsAPI.Middlewares.ExceptionHandlingMiddlewares
         {
             try
             {
-                _logger.Log(LogLevel.Information, httpContext.Request.Body
-                    .ToString());
+                var stopwatch = Stopwatch.StartNew();
+
+                _logger.LogInformation("Request started: {Method} {Path}",
+                    httpContext.Request.Method,
+                    httpContext.Request.Path);
+
+
                 await _next(httpContext);
-                _logger.Log(LogLevel.Information, httpContext.Response.Body.ToString());
+
+                stopwatch.Stop();
+
+                _logger.LogInformation("Request finished: {Method} {Path}, Status Code: {StatusCode}, Duration: {Duration}ms",
+                    httpContext.Request.Method,
+                    httpContext.Request.Path,
+                    httpContext.Response.StatusCode,
+                    stopwatch.ElapsedMilliseconds);
             }
             catch (Exception ex)
             {

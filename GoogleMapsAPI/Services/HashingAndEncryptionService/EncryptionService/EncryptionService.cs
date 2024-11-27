@@ -5,14 +5,16 @@ namespace GoogleMapsAPI.Services.HashingAndEncryptionService.EncryptionService
 {
     public class EncryptionService : IEncryptionService
     {
-        public readonly string _encryptionKey;
+        private readonly string _encryptionKey;
+        private readonly ILogger<EncryptionService> _logger;
         /// <summary>
         /// We need IConfiguration in order to access user secrets
         /// </summary>
         /// <param name="configuration"></param>
         /// <exception cref="Exception"></exception>
-        public EncryptionService(IConfiguration configuration)
+        public EncryptionService(IConfiguration configuration, ILogger<EncryptionService> logger)
         {
+            _logger = logger;
             _encryptionKey = configuration["EncryptionSettings:EncryptionKey"] ?? throw new Exception("Encryption Key not found in user secrets");
         }
 
@@ -52,6 +54,7 @@ namespace GoogleMapsAPI.Services.HashingAndEncryptionService.EncryptionService
                         Buffer.BlockCopy(encryptedBytes, 0, resultBytes, saltBytes.Length + ivBytes.Length, encryptedBytes.Length);
 
                         // Convert to hexadecimal string
+                        _logger.LogInformation("Encrypted API KEY");
                         return BitConverter.ToString(resultBytes).Replace("-", ""); // Hexadecimal format
                     }
                 }
@@ -98,6 +101,7 @@ namespace GoogleMapsAPI.Services.HashingAndEncryptionService.EncryptionService
                     using (var csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
                     using (var srDecrypt = new StreamReader(csDecrypt, Encoding.UTF8))
                     {
+                        _logger.LogInformation("Decrypted API KEY");
                         return srDecrypt.ReadToEnd(); // Plain text
                     }
                 }

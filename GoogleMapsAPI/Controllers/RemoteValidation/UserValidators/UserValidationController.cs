@@ -13,11 +13,14 @@ namespace GoogleMapsAPI.Controllers.RemoteValidation.UserValidators
         private readonly IApiChecker _apiChecker;
         private readonly IHashingService _hashing;
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<UserValidationController> _logger;
         public UserValidationController(
+            ILogger<UserValidationController> logger,
             IApiChecker apiChecker,
             IHashingService hashing,
             ApplicationDbContext context)
         {
+            _logger = logger;
             _hashing = hashing;
             _apiChecker = apiChecker;
             _context = context;
@@ -36,6 +39,7 @@ namespace GoogleMapsAPI.Controllers.RemoteValidation.UserValidators
                 return Json("API key already exist.");
             try
             {
+                _logger.LogInformation("Trying to Verify API key for Hash Value: - " + hashedValue);
                 // Validate the API key
                 bool isValid = await _apiChecker.IsApiValidAsync(EncryptedApiKey);
 
@@ -46,6 +50,7 @@ namespace GoogleMapsAPI.Controllers.RemoteValidation.UserValidators
             }
             catch (Exception ex)
             {
+                _logger.LogError("Failed to Validate API key :- " + hashedValue + " due to " + ex.Message);
                 // Generic error handling
                 return Json($"{ex.Message} : An error occurred while validating the API key.");
             }
@@ -54,6 +59,7 @@ namespace GoogleMapsAPI.Controllers.RemoteValidation.UserValidators
         [AcceptVerbs("GET", "POST")]
         public async Task<IActionResult> ValidateEmail(string email)
         {
+            _logger.LogInformation("Validating Email Address: - " + email);
             if (await _context.Users!.Where(u => u.Email!.ToLower() == email.ToLower()).AnyAsync())
                 return Json("Email Already Exist. Use another email address.");
             return Json(true);
@@ -62,6 +68,7 @@ namespace GoogleMapsAPI.Controllers.RemoteValidation.UserValidators
         [AcceptVerbs("GET", "POST")]
         public IActionResult CheckPassword(string password)
         {
+            _logger.LogInformation("Validating Password");
             if (password == null)
                 return Json("Please enter a password");
             if (password.Length < 8)
@@ -84,6 +91,7 @@ namespace GoogleMapsAPI.Controllers.RemoteValidation.UserValidators
         [AcceptVerbs("GET", "POST")]
         public async Task<IActionResult> CheckUsername(string username)
         {
+            _logger.LogInformation("Validating Username: - " + username);
             if (username.Length < 8 || username.Length > 20 || username.IsNullOrEmpty())
                 return Json("Username must be 8 characters long and at most 20.");
             if (username.Any(char.IsWhiteSpace))
