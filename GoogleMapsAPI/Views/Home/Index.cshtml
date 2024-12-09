@@ -1,64 +1,101 @@
 ﻿@model GoogleMapsAPI.Models.ViewModels.UserViewModels.RegisterViewModel
 @{
-    ViewData["Title"] = "Create User";
+    ViewData["Title"] = "Register";
 }
 
-<h2>Create User</h2>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-lg border-0 rounded-lg">
+                <div class="card-header bg-primary text-white text-center py-4">
+                    <h2 class="mb-0 fw-bold">Register</h2>
+                </div>
+                <div class="card-body p-4">
+                    <!-- Display validation summary for model-level errors -->
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-<!-- Display validation summary for model-level errors -->
-@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <!-- Begin form using ASP.NET Core Tag Helpers -->
+                    <form asp-action="Index" method="post">
+                        <div class="mb-4">
+                            <!-- Username Field -->
+                            <label asp-for="Username" class="form-label fw-bold"></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="bi bi-person"></i>
+                                </span>
+                                <input asp-for="Username" class="form-control" placeholder="Enter username" />
+                            </div>
+                            <span asp-validation-for="Username" class="text-danger small"></span>
+                        </div>
 
-<!-- Begin form using ASP.NET Core Tag Helpers -->
-<form asp-action="Index" method="post">
-    <div class="form-group">
-        <!-- Username Field -->
-        <label asp-for="Username" class="control-label"></label>
-        <input asp-for="Username" class="form-control" />
-        <span asp-validation-for="Username" class="text-danger"></span>
+                        <div class="mb-4">
+                            <!-- Password Field -->
+                            <label asp-for="Password" class="form-label fw-bold"></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="bi bi-lock"></i>
+                                </span>
+                                <input asp-for="Password" class="form-control" placeholder="Enter password" />
+                            </div>
+                            <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <!-- API Key Field -->
+                            <label asp-for="EncryptedApiKey" class="form-label fw-bold"></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="bi bi-key"></i>
+                                </span>
+                                <input asp-for="EncryptedApiKey" class="form-control" placeholder="Enter API key" />
+                            </div>
+                            <span asp-validation-for="EncryptedApiKey" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <!-- Email Address Field -->
+                            <label asp-for="Email" class="form-label fw-bold"></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="bi bi-envelope"></i>
+                                </span>
+                                <input asp-for="Email" class="form-control" placeholder="Enter email address" />
+                            </div>
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <!-- Phone Number Field -->
+                            <label asp-for="Phone" class="form-label fw-bold"></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="bi bi-telephone"></i>
+                                </span>
+                                <input asp-for="Phone" class="form-control" placeholder="Enter phone number" />
+                            </div>
+                            <span asp-validation-for="Phone" class="text-danger small"></span>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-person-plus me-2"></i>Create Account
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center py-3 bg-light">
+                    <div class="small">Already have an account? <a href="#" class="text-primary">Sign in</a></div>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <div class="form-group">
-        <!-- Password Field -->
-        <label asp-for="Password" class="control-label"></label>
-        <input asp-for="Password" class="form-control" />
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <!-- API Key Field -->
-        <label asp-for="EncryptedApiKey" class="control-label"></label>
-        <input asp-for="EncryptedApiKey" class="form-control" />
-        <span asp-validation-for="EncryptedApiKey" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <!-- Email Address Field -->
-        <label asp-for="Email" class="control-label"></label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <!-- Phone Number Field -->
-        <label asp-for="Phone" class="control-label"></label>
-        <input asp-for="Phone" class="form-control" />
-        <span asp-validation-for="Phone" class="text-danger"></span>
-    </div>
-
-    <!-- Hidden fields for CreatedAt and UpdatedAt if needed -->
-    @* 
-    <input type="hidden" asp-for="CreatedAt" />
-    <input type="hidden" asp-for="UpdatedAt" />
-    *@
-
-    <div class="form-group">
-        <input type="submit" value="Create" class="btn btn-primary" />
-    </div>
-</form>
+</div>
 
 <!-- Include necessary scripts for client-side validation -->
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <!-- Bootstrap Icons CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
 }
